@@ -1,0 +1,200 @@
+<!--
+  ============================================================
+  TEMPLATE: Página de Experiência AR (vídeo do preparo + produto 3D/AR)
+  ------------------------------------------------------------
+  COMO USAR:
+  1. Abra este arquivo no SAFARI do seu iPhone (ou hospede em qualquer
+     servidor: GitHub Pages, Vercel, Netlify, Hostinger...).
+  2. Toque em "Ver na minha mesa" para testar o AR no seu iPhone.
+  3. Para colocar SEU produto: troque o link em  src="..."  do <model-viewer>
+     pelo seu modelo .glb (e opcionalmente .usdz em ios-src).
+  4. Para colocar SEU vídeo do preparo: coloque um arquivo chamado
+     preparo.mp4 na mesma pasta deste HTML.
+  Obs.: o botão de AR NÃO funciona dentro de prévias/iframes — abra a
+  página direto no navegador do celular.
+  ============================================================
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smoothie Tropical · Experiência AR</title>
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#FFF9F2;
+    --ink:#2B1A12;
+    --ink-soft:#7A6457;
+    --mango:#FF8A3D;
+    --guava:#FF4D6D;
+    --leaf:#2FAE66;
+    --line:#F0E4D6;
+    --radius:22px;
+    --juice:linear-gradient(135deg,var(--mango),var(--guava));
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:0 20px 56px}
+
+  /* topo / marca */
+  .brand{
+    display:flex;align-items:center;gap:9px;
+    padding:22px 0 6px;
+  }
+  .dot{width:13px;height:13px;border-radius:50%;background:var(--juice)}
+  .brand b{font-family:"Baloo 2";font-weight:800;letter-spacing:-.2px;font-size:15px}
+  .brand span{color:var(--ink-soft);font-size:12px;font-weight:500;
+    border-left:1px solid var(--line);padding-left:9px;margin-left:2px}
+
+  /* hero */
+  .hero{padding:26px 0 18px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:12px;font-weight:600;color:var(--guava);
+    text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;
+  }
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--juice);border-radius:2px}
+  h1{
+    font-family:"Baloo 2";font-weight:800;font-size:40px;line-height:1.02;
+    letter-spacing:-1px;margin-bottom:10px;
+  }
+  h1 em{font-style:normal;background:var(--juice);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .lede{color:var(--ink-soft);font-size:15.5px;max-width:42ch}
+
+  /* seções */
+  .step{margin-top:34px;opacity:0;transform:translateY(14px);
+    animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .step:nth-of-type(2){animation-delay:.08s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.step{animation:none;opacity:1;transform:none}}
+
+  .label{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .num{font-family:"Baloo 2";font-weight:800;font-size:13px;color:#fff;
+    background:var(--ink);width:24px;height:24px;border-radius:8px;
+    display:grid;place-items:center;flex:0 0 auto;transform:translateY(2px)}
+  .label h2{font-family:"Baloo 2";font-weight:700;font-size:21px;letter-spacing:-.3px}
+
+  /* vídeo */
+  .videoBox{position:relative;border-radius:var(--radius);overflow:hidden;
+    background:#1a110c;aspect-ratio:9/12;box-shadow:0 18px 40px -22px rgba(43,26,18,.5)}
+  .videoBox video{width:100%;height:100%;object-fit:cover;display:block}
+  .videoFallback{position:absolute;inset:0;display:grid;place-content:center;
+    text-align:center;gap:6px;padding:24px;color:#fff;
+    background:radial-gradient(120% 90% at 50% 20%,rgba(255,138,61,.45),rgba(26,17,12,.92))}
+  .videoFallback .play{width:62px;height:62px;border-radius:50%;background:#fff;
+    display:grid;place-items:center;margin:0 auto 6px}
+  .videoFallback .play::after{content:"";border-left:18px solid var(--guava);
+    border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:5px}
+  .videoFallback b{font-family:"Baloo 2";font-weight:700;font-size:17px}
+  .videoFallback small{font-size:12.5px;opacity:.8;max-width:30ch;margin:0 auto}
+
+  /* 3d / ar */
+  model-viewer{width:100%;aspect-ratio:1/1;border-radius:var(--radius);
+    background:
+      radial-gradient(130% 100% at 50% 0%,#FFE9D6 0%,#FFF9F2 60%);
+    border:1px solid var(--line)}
+  .arNote{display:flex;align-items:center;gap:8px;color:var(--ink-soft);
+    font-size:13px;margin-top:12px}
+  .arNote .pin{width:18px;height:18px;border-radius:50%;background:var(--juice);
+    flex:0 0 auto;box-shadow:0 0 0 4px rgba(255,77,109,.13)}
+  .arBtn{
+    appearance:none;border:0;cursor:pointer;
+    margin-top:16px;width:100%;padding:17px;
+    font-family:"Baloo 2";font-weight:700;font-size:17px;color:#fff;
+    background:var(--juice);border-radius:16px;
+    box-shadow:0 14px 26px -12px rgba(255,77,109,.7);
+    transition:transform .15s ease,box-shadow .15s ease;
+  }
+  .arBtn:active{transform:scale(.985);box-shadow:0 8px 18px -12px rgba(255,77,109,.7)}
+
+  /* rodapé / assinatura do seu negócio */
+  .foot{margin-top:42px;padding-top:20px;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .foot p{font-size:12.5px;color:var(--ink-soft)}
+  .foot .mk{font-family:"Baloo 2";font-weight:700;color:var(--ink);font-size:13px}
+</style>
+
+<div class="wrap">
+
+  <div class="brand">
+    <span class="dot"></span>
+    <b>Juice Street</b>
+    <span>Praia Brava · Itajaí</span>
+  </div>
+
+  <header class="hero">
+    <span class="eyebrow">Você escaneou o nosso menu</span>
+    <h1>Smoothie <em>Tropical</em></h1>
+    <p class="lede">Manga, maracujá e hortelã. Veja como ele é feito e, em seguida,
+      coloque ele em cima da sua mesa em 3D.</p>
+  </header>
+
+  <!-- PASSO 1: vídeo do preparo -->
+  <section class="step">
+    <div class="label"><span class="num">1</span><h2>Como é feito</h2></div>
+    <div class="videoBox">
+      <!-- Coloque um arquivo "preparo.mp4" nesta pasta para o vídeo aparecer -->
+      <video controls playsinline preload="metadata" poster="">
+        <source src="preparo.mp4" type="video/mp4">
+      </video>
+      <!-- some sozinho quando houver vídeo carregado -->
+      <div class="videoFallback" id="vf">
+        <div class="play"></div>
+        <b>Vídeo do preparo entra aqui</b>
+        <small>Grave 15–20s do preparo e salve como <strong>preparo.mp4</strong> na mesma pasta.</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASSO 2: produto em 3D / AR -->
+  <section class="step">
+    <div class="label"><span class="num">2</span><h2>Veja na sua mesa</h2></div>
+
+    <!-- TROQUE o src pelo seu modelo .glb. Este é só um exemplo para provar
+         que o AR funciona no seu celular. -->
+    <model-viewer
+      id="mv"
+      src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+      alt="Modelo de exemplo — troque pelo seu produto"
+      camera-controls
+      auto-rotate
+      auto-rotate-delay="600"
+      shadow-intensity="1"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      ar-scale="fixed">
+    </model-viewer>
+
+    <div class="arNote"><span class="pin"></span>
+      Modelo de exemplo. Troque pelo prato/drink real do cliente.</div>
+
+    <button class="arBtn" onclick="document.getElementById('mv').activateAR()">
+      Ver na minha mesa em 3D
+    </button>
+  </section>
+
+  <footer class="foot">
+    <p>Experiência criada por<br><span class="mk">Sua Empresa de AR</span></p>
+    <p>Sem instalar app.<br>É só apontar a câmera.</p>
+  </footer>
+
+</div>
+
+<script>
+  // esconde o aviso do vídeo assim que um vídeo real carregar
+  const v = document.querySelector('video'), vf = document.getElementById('vf');
+  if (v) v.addEventListener('loadeddata', () => { vf.style.display = 'none'; });
+</script>
