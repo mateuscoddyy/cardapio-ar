@@ -243,12 +243,26 @@
 
   /* ============ assinatura ============ */
   .assina{
-    margin-top:46px;padding:22px 0 40px;border-top:1px solid var(--hair);
-    display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+    margin-top:52px;padding:26px 0 46px;border-top:1px solid var(--hair);
   }
-  .assina p{color:var(--smoke);line-height:1.8}
-  .assina .quem{color:var(--bone)}
-  .assina a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ember)}
+  .assina .rotulo{color:var(--smoke)}
+  .assina .quem{
+    font-family:"Fraunces",Georgia,serif;
+    font-variation-settings:"SOFT" 40,"WONK" 1,"opsz" 60;
+    font-weight:500;font-size:22px;letter-spacing:-.015em;
+    color:var(--bone);margin-top:5px;
+  }
+  /* contorno, não preenchido: o botão de AR continua sendo o principal */
+  .assina .contato{
+    display:inline-flex;align-items:center;gap:10px;
+    margin-top:20px;padding:14px 20px;
+    border:1px solid rgba(226,85,29,.55);border-radius:13px;
+    color:var(--bone);text-decoration:none;
+    font-size:15.5px;font-weight:500;
+    transition:background .2s ease,border-color .2s ease;
+  }
+  .assina .contato svg{color:var(--ember);flex:0 0 auto}
+  .assina .contato:hover{background:rgba(226,85,29,.1);border-color:var(--ember)}
 
   /* ============ entrada ============ */
   .sobe{opacity:0;transform:translateY(13px);animation:sobe .7s cubic-bezier(.2,.7,.2,1) forwards}
@@ -329,8 +343,14 @@
   </nav>
 
   <footer class="assina">
-    <p class="mono">experiência feita por<br><span class="quem" id="sWho"></span></p>
-    <p class="mono"><a id="sLink" href="#">quero no meu<br>restaurante</a></p>
+    <p class="mono rotulo">experiência criada por</p>
+    <p class="quem" id="sWho"></p>
+    <a class="contato" id="sLink" href="#">
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="19" height="19">
+        <path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 0 1 5.83 2.42 8.2 8.2 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.1-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.09-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42h-.47c-.16 0-.43.06-.65.31-.22.25-.85.84-.85 2.03 0 1.2.87 2.35.99 2.51.12.17 1.71 2.61 4.15 3.66.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/>
+      </svg>
+      <span>Quero um no meu restaurante</span>
+    </a>
   </footer>
 
 </div>
@@ -346,9 +366,9 @@ const CONFIG = {
   hero: "imagens/brasa.jpg",          // foto de abertura, 1400px, ~250 KB
   logo: "marca/aspas-logo.png",       // PNG claro com transparência
 
-  // Aviso obrigatório enquanto a página não for autorizada pelo
-  // restaurante. Deixe vazio ("") só depois que o cliente fechar.
-  demoNote: "demonstração — não é o cardápio oficial do Aspas",
+  // Faixa de aviso no topo. Vazio = some. A assinatura do rodapé
+  // já identifica quem fez a página.
+  demoNote: "",
 
   // Vídeo do preparo. Peça o arquivo bruto ao restaurante e salve
   // como video/preparo.mp4 — assim ele entra dentro deste design, em
@@ -356,8 +376,8 @@ const CONFIG = {
   video: "",
   videoPoster: "",
 
-  studio: "Seu Estúdio",
-  whatsapp: "5547999999999",          // só números, com DDI 55
+  studio: "Mateus Eleuterio",
+  whatsapp: "5547999171043",          // 55 + DDD 47 + 99917-1043
   pitch: "Vi a demonstração do cardápio em 3D e quero conversar.",
 
   // Nomes, descrições e preços vêm do cardápio que o próprio Aspas
