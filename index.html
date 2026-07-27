@@ -194,6 +194,24 @@
   }
   .foco .fonte:empty{display:none}
 
+  /* ============ o preparo ============ */
+  .preparo{margin-top:40px}
+  .preparo[hidden]{display:none}
+  .preparo .linha{padding-bottom:11px;border-bottom:1px solid var(--hair)}
+  .preparo h2{
+    font-family:"Fraunces",Georgia,serif;
+    font-variation-settings:"SOFT" 40,"WONK" 1,"opsz" 60;
+    font-weight:500;font-size:24px;letter-spacing:-.015em;
+  }
+  .preparo .quadro{
+    margin-top:16px;border-radius:var(--r);overflow:hidden;
+    background:#000;border:1px solid var(--hair);line-height:0;
+  }
+  .preparo video{
+    display:block;width:100%;height:auto;max-height:72vh;
+    object-fit:contain;background:#000;
+  }
+
   /* ============ o cardápio ============ */
   .cardapio{margin-top:38px}
   .cardapio .cap{color:var(--smoke);display:block;margin-bottom:4px}
@@ -296,6 +314,15 @@
     <p class="mono fonte" id="fFonte"></p>
   </section>
 
+  <section class="preparo" id="preparo" hidden>
+    <div class="linha">
+      <h2>Como é feito</h2>
+    </div>
+    <div class="quadro">
+      <video id="prepVideo" controls playsinline preload="none"></video>
+    </div>
+  </section>
+
   <nav class="cardapio" aria-label="Cardápio">
     <span class="mono cap">cardápio</span>
     <div id="railList"></div>
@@ -322,6 +349,12 @@ const CONFIG = {
   // Aviso obrigatório enquanto a página não for autorizada pelo
   // restaurante. Deixe vazio ("") só depois que o cliente fechar.
   demoNote: "demonstração — não é o cardápio oficial do Aspas",
+
+  // Vídeo do preparo. Peça o arquivo bruto ao restaurante e salve
+  // como video/preparo.mp4 — assim ele entra dentro deste design, em
+  // vez da moldura branca do embed do Instagram. Vazio = seção some.
+  video: "",
+  videoPoster: "",
 
   studio: "Seu Estúdio",
   whatsapp: "5547999999999",          // só números, com DDI 55
@@ -367,6 +400,14 @@ if (CONFIG.logo) {
   const txt = document.getElementById('bBrand');
   txt.style.cssText =
     'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)';
+}
+
+// a seção do preparo só existe quando há vídeo de verdade
+if (CONFIG.video) {
+  const v = document.getElementById('prepVideo');
+  v.src = CONFIG.video;
+  if (CONFIG.videoPoster) v.poster = CONFIG.videoPoster;
+  document.getElementById('preparo').hidden = false;
 }
 
 const note = document.getElementById('demoNote');

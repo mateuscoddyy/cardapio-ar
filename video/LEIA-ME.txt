@@ -1,0 +1,5 @@
+Coloque aqui o arquivo do preparo, nomeado preparo.mp4,
+e aponte CONFIG.video para "video/preparo.mp4".
+
+Peca o bruto ao restaurante: fica dentro do design da pagina,
+sem a moldura branca do embed do Instagram.
