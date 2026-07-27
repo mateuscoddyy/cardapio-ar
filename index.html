@@ -63,9 +63,10 @@
   .open{padding:30px 0 22px}
   .open .kicker{
     font-family:"JetBrains Mono",monospace;
-    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--haze);display:block;margin-bottom:14px;
+    font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--salt);display:block;margin-bottom:14px;
   }
+  .open .kicker:empty{display:none}
   .open h1{
     font-family:"Bricolage Grotesque",system-ui,sans-serif;
     font-weight:800;font-size:clamp(32px,9vw,44px);line-height:1.0;
@@ -186,6 +187,9 @@
     flex:0 0 auto;opacity:.35;transform:translateY(-3px);
     transition:opacity .2s ease,box-shadow .2s ease,background .2s ease;
   }
+  .rail button.pending{cursor:default;opacity:.45}
+  .rail button.pending:hover{color:var(--haze)}
+  .rail button.pending .pr{font-style:normal;letter-spacing:.06em;font-size:11px;text-transform:uppercase}
   .rail button[aria-current="true"]{color:var(--foam)}
   .rail button[aria-current="true"] .lamp{
     background:var(--ember);opacity:1;
@@ -226,7 +230,7 @@
   </div>
 
   <header class="open rise">
-    <span class="kicker" id="bTable">mesa 7</span>
+    <span class="kicker" id="demoNote"></span>
     <h1>O prato antes<br>de pedir.</h1>
     <p>Toque num item para ver em 3D. Depois coloque ele na sua mesa, do tamanho real.</p>
   </header>
@@ -281,45 +285,31 @@
    precisa ser tocado.
    ============================================================ */
 const CONFIG = {
-  brand: "Maré Alta",
-  place: "Praia Brava",
-  table: "mesa 7",
+  brand: "Aspas",
+  place: "Praia Brava · Itajaí",
+
+  // Aviso obrigatório enquanto a página não for autorizada pelo
+  // restaurante. Deixe vazio ("") só depois que o cliente fechar.
+  demoNote: "demonstração — não é o cardápio oficial do Aspas",
 
   // assinatura do rodapé
   studio: "Seu Estúdio",
   whatsapp: "5547999999999",          // só números, com DDI 55
-  pitch: "Vi o cardápio em 3D e quero um pro meu restaurante.",
+  pitch: "Vi a demonstração do cardápio em 3D e quero conversar.",
 
+  // Sem preços: não invente valores de um restaurante real.
+  // Preencha "price" só com a tabela que o próprio cliente passar.
   items: [
     {
-      name: "Moqueca de banana-da-terra",
-      price: "R$ 62",
-      desc: "Dendê, leite de coco e pimenta-de-cheiro. Vai com arroz e pirão. Serve dois.",
-      // TROQUE pelo .glb do prato real
-      glb: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb",
+      name: "Peixe selado, purê e amêndoas",
+      price: "",
+      desc: "Modelo 3D gerado a partir da foto publicada no site do Aspas. É este o resultado que entra para cada prato do cardápio.",
+      glb: "modelos/aspas-peixe.glb",
       usdz: ""                        // opcional: .usdz melhora o AR no iPhone
     },
-    {
-      name: "Bolinho de bacalhau",
-      price: "R$ 34",
-      desc: "Seis unidades, fritos na hora. Limão siciliano à parte.",
-      glb: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb",
-      usdz: ""
-    },
-    {
-      name: "Caipirinha de caju",
-      price: "R$ 26",
-      desc: "Caju in natura, cachaça de alambique, pouco açúcar.",
-      glb: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb",
-      usdz: ""
-    },
-    {
-      name: "Pudim de tapioca",
-      price: "R$ 22",
-      desc: "Coco queimado por cima. Feito de manhã, acaba cedo.",
-      glb: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF-Binary/Avocado.glb",
-      usdz: ""
-    }
+    { name: "Polvo na brasa",  price: "", pending: true },
+    { name: "Spritz da casa",  price: "", pending: true },
+    { name: "Sobremesa",       price: "", pending: true }
   ]
 };
 
@@ -333,9 +323,12 @@ const rail   = document.getElementById('railList');
 
 document.getElementById('bBrand').textContent = CONFIG.brand;
 document.getElementById('bPlace').textContent = CONFIG.place;
-document.getElementById('bTable').textContent = CONFIG.table;
 document.getElementById('sWho').textContent   = CONFIG.studio;
 document.title = CONFIG.brand + " · cardápio em 3D";
+
+const note = document.getElementById('demoNote');
+if (CONFIG.demoNote) note.textContent = CONFIG.demoNote;
+else note.remove();
 
 const link = document.getElementById('sLink');
 link.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(CONFIG.pitch);
@@ -360,8 +353,8 @@ function show(i){
   mv.alt = item.name + " em 3D";
 
   document.getElementById('fName').textContent  = item.name;
-  document.getElementById('fPrice').textContent = item.price;
-  document.getElementById('fDesc').textContent  = item.desc;
+  document.getElementById('fPrice').textContent = item.price || "";
+  document.getElementById('fDesc').textContent  = item.desc || "";
 
   [...rail.children].forEach((b, n) =>
     b.setAttribute('aria-current', n === i ? 'true' : 'false'));
@@ -375,8 +368,16 @@ CONFIG.items.forEach((item, i) => {
     '<span class="nm"></span>' +
     '<span class="pr"></span>';
   b.querySelector('.nm').textContent = item.name;
-  b.querySelector('.pr').textContent = item.price;
-  b.addEventListener('click', () => show(i));
+
+  if (item.pending) {
+    // ainda sem modelo: não finge que existe
+    b.querySelector('.pr').textContent = "em produção";
+    b.disabled = true;
+    b.classList.add('pending');
+  } else {
+    b.querySelector('.pr').textContent = item.price || "";
+    b.addEventListener('click', () => show(i));
+  }
   rail.appendChild(b);
 });
 
