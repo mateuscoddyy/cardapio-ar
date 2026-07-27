@@ -188,6 +188,11 @@
   }
   .foco .preco:empty{display:none}
   .foco .desc{color:var(--smoke);margin-top:13px;max-width:44ch}
+  .foco .fonte{
+    color:var(--smoke);opacity:.6;margin-top:14px;
+    line-height:1.7;letter-spacing:.09em;max-width:40ch;
+  }
+  .foco .fonte:empty{display:none}
 
   /* ============ o cardápio ============ */
   .cardapio{margin-top:38px}
@@ -288,6 +293,7 @@
       <span class="preco" id="fPrice"></span>
     </div>
     <p class="desc" id="fDesc"></p>
+    <p class="mono fonte" id="fFonte"></p>
   </section>
 
   <nav class="cardapio" aria-label="Cardápio">
@@ -321,18 +327,20 @@ const CONFIG = {
   whatsapp: "5547999999999",          // só números, com DDI 55
   pitch: "Vi a demonstração do cardápio em 3D e quero conversar.",
 
-  // Sem preços: não invente valores de um restaurante real.
+  // Nomes, descrições e preços vêm do cardápio que o próprio Aspas
+  // publica no Linktree. Nada aqui é inventado.
   items: [
     {
-      name: "Peixe selado, purê e amêndoas",
-      price: "",
-      desc: "Modelo 3D gerado a partir da foto publicada no site do Aspas. É este o resultado que entra para cada prato do cardápio.",
+      name: "Tiradito de peixe branco maçaricado",
+      price: "R$ 86",
+      desc: "Peixe do dia maturado, manteiga noisette, amêndoas defumadas, queijo fresco pomerode, mostarda na brasa e molho ponzu.",
+      fonte: "Modelo 3D gerado a partir da foto publicada no site do restaurante.",
       glb: "modelos/aspas-peixe.glb",
       usdz: ""                        // opcional: melhora o AR no iPhone
     },
-    { name: "Polvo na brasa", pending: true },
-    { name: "Spritz da casa",  pending: true },
-    { name: "Sobremesa",       pending: true }
+    { name: "Polvo no espeto",             price: "R$ 129", pending: true },
+    { name: "Moqueca de camarão e peixe",  price: "R$ 359", pending: true },
+    { name: "Arroz negro de polvo",        price: "R$ 379", pending: true }
   ]
 };
 
@@ -389,6 +397,7 @@ function mostrar(i){
   document.getElementById('fName').textContent  = item.name;
   document.getElementById('fPrice').textContent = item.price || "";
   document.getElementById('fDesc').textContent  = item.desc  || "";
+  document.getElementById('fFonte').textContent = item.fonte || "";
 
   [...rail.children].forEach((b, n) =>
     b.setAttribute('aria-current', n === i ? 'true' : 'false'));
