@@ -382,6 +382,9 @@ const CONFIG = {
 
   // Nomes, descrições e preços vêm do cardápio que o próprio Aspas
   // publica no Linktree. Nada aqui é inventado.
+  //
+  // Cada modelo saiu da foto do prato no site deles, pelo mesmo
+  // caminho: ferramentas/preparar-modelo.sh
   items: [
     {
       name: "Tiradito de peixe branco maçaricado",
@@ -391,9 +394,41 @@ const CONFIG = {
       glb: "modelos/aspas-peixe.glb",
       usdz: ""                        // opcional: melhora o AR no iPhone
     },
-    { name: "Polvo no espeto",             price: "R$ 129", pending: true },
-    { name: "Moqueca de camarão e peixe",  price: "R$ 359", pending: true },
-    { name: "Arroz negro de polvo",        price: "R$ 379", pending: true }
+    {
+      name: "Camarão rosa G no espeto",
+      price: "R$ 159",
+      desc: "Camarões na brasa servidos com molho tártaro do mar. Porção de 200 g.",
+      fonte: "Modelo 3D gerado a partir da foto publicada no site do restaurante.",
+      glb: "modelos/aspas-camarao.glb",
+      usdz: ""
+    },
+    {
+      name: "Parmegiana de meka",
+      price: "R$ 290",
+      desc: "Finalizada no forno à lenha com molho branco, espinafre, queijo vale do testo, alho assado e amêndoas defumadas. Acompanha arroz e batata frita.",
+      fonte: "Modelo 3D gerado a partir da foto publicada no site do restaurante.",
+      glb: "modelos/aspas-parmegiana.glb",
+      usdz: ""
+    },
+    {
+      // A foto mostra só o corte, sem os acompanhamentos que o
+      // cardápio descreve — por isso o nome é descritivo e sem preço.
+      // Confirme com o restaurante qual item é, antes de anunciar.
+      name: "Ancho na brasa",
+      price: "",
+      desc: "Corte na brasa, fatiado e finalizado com sal grosso.",
+      fonte: "Modelo 3D gerado a partir da foto publicada no site do restaurante. Nome a confirmar com a casa.",
+      glb: "modelos/aspas-ancho.glb",
+      usdz: ""
+    },
+    {
+      name: "Couve-flor na brasa",
+      price: "R$ 69",
+      desc: "Assada no forno à lenha, creme de castanha do pará e vinagrete de pupunha.",
+      fonte: "Modelo 3D gerado a partir da foto publicada no site do restaurante.",
+      glb: "modelos/aspas-couveflor.glb",
+      usdz: ""
+    }
   ]
 };
 
