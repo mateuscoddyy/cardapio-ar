@@ -1,257 +1,277 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#071A1C">
-<title>Maré Alta · cardápio em 3D</title>
+<meta name="theme-color" content="#0C0A09">
+<title>Aspas · cardápio em 3D</title>
 <meta name="description" content="Veja o prato em 3D e coloque ele na sua mesa. Sem instalar nada.">
 
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Schibsted+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    /* fundo frio, luz quente — só duas temperaturas na página inteira */
-    --abyss:#071A1C;
-    --tide:#0E2C30;
-    --foam:#E8F2EF;
-    --haze:#7FA3A0;
-    --ember:#FF7A2F;
-    --salt:#F2C879;
-
-    --edge:rgba(232,242,239,.10);
-    --r:20px;
+    /* carvão e brasa — a paleta é a da casa, não a minha */
+    --coal:#0C0A09;      /* carvão apagado, preto quente */
+    --ash:#17130F;       /* superfície elevada */
+    --bone:#F4EFE9;      /* texto principal, branco quente */
+    --smoke:#948880;     /* texto secundário */
+    --ember:#E2551D;     /* brasa viva */
+    --flame:#F0A32C;     /* o miolo amarelo do carvão */
+    --hair:rgba(244,239,233,.11);
+    --r:18px;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%;background:var(--abyss)}
+  html{-webkit-text-size-adjust:100%;background:var(--coal)}
 
   body{
-    background:var(--abyss);
-    color:var(--foam);
-    font-family:"Newsreader",Georgia,serif;
-    font-weight:300;
-    font-size:16.5px;
-    line-height:1.55;
+    background:var(--coal);
+    color:var(--bone);
+    font-family:"Schibsted Grotesk",system-ui,sans-serif;
+    font-size:16px;line-height:1.6;
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
 
-  .wrap{max-width:540px;margin:0 auto;padding:0 22px 64px}
+  .wrap{max-width:560px;margin:0 auto;padding:0 22px}
 
-  :focus-visible{outline:2px solid var(--ember);outline-offset:3px;border-radius:6px}
+  :focus-visible{outline:2px solid var(--flame);outline-offset:3px;border-radius:5px}
 
-  /* ---------- marca ---------- */
-  .brand{
-    display:flex;align-items:center;gap:9px;
-    padding:24px 0 4px;
+  .mono{
     font-family:"JetBrains Mono",monospace;
-    font-size:11px;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--haze);
-  }
-  .brand .lamp{
-    width:7px;height:7px;border-radius:50%;
-    background:var(--ember);
-    box-shadow:0 0 12px 2px rgba(255,122,47,.65);
-    flex:0 0 auto;
-  }
-  .brand strong{color:var(--foam);font-weight:600}
-  .brand .sep{opacity:.4}
-  /* logo do cliente, quando houver: substitui o nome em texto */
-  .brand .logo{height:26px;width:auto;display:block;flex:0 0 auto}
-  .brand .logo[hidden]{display:none}
-
-  /* ---------- abertura ---------- */
-  .open{padding:30px 0 22px}
-  .open .kicker{
-    font-family:"JetBrains Mono",monospace;
-    font-size:11px;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--salt);display:block;margin-bottom:14px;
-  }
-  .open .kicker:empty{display:none}
-  .open h1{
-    font-family:"Bricolage Grotesque",system-ui,sans-serif;
-    font-weight:800;font-size:clamp(32px,9vw,44px);line-height:1.0;
-    letter-spacing:-.025em;
-  }
-  .open p{
-    color:var(--haze);margin-top:12px;max-width:34ch;font-size:16px;
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
   }
 
-  /* ---------- o palco: poça de luz ---------- */
-  .stage{
-    position:relative;margin-top:26px;
-    border-radius:var(--r);
-    background:var(--tide);
-    border:1px solid var(--edge);
+  /* ============ abertura: o fogo ============ */
+  .hero{
+    position:relative;
+    height:clamp(340px,58vh,520px);
     overflow:hidden;
-    isolation:isolate;
+    background:#1a0f08;
   }
-  /* a luz — único gradiente da página */
-  .stage::before{
+  .hero img{
+    position:absolute;inset:0;
+    width:100%;height:100%;object-fit:cover;
+    /* a foto nasce escura e clareia na entrada */
+    opacity:0;transform:scale(1.06);
+    animation:acender 1.5s cubic-bezier(.2,.7,.2,1) .1s forwards;
+  }
+  @keyframes acender{to{opacity:1;transform:scale(1)}}
+
+  /* o fogo se apaga na borda inferior e vira o fundo da página */
+  .hero::after{
+    content:"";position:absolute;inset:0;
+    background:
+      linear-gradient(to bottom,
+        rgba(12,10,9,.55) 0%,
+        rgba(12,10,9,.10) 26%,
+        rgba(12,10,9,.72) 72%,
+        var(--coal) 100%);
+  }
+  .heroMarca{
+    position:absolute;left:0;right:0;bottom:26px;z-index:2;
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+    padding:0 22px;
+  }
+  .heroMarca img{
+    /* anula a animação do <img> de fundo */
+    position:static;width:auto;height:44px;opacity:1;transform:none;animation:none;
+    filter:drop-shadow(0 3px 14px rgba(0,0,0,.6));
+  }
+  .heroMarca .lugar{color:var(--bone);opacity:.72}
+
+  /* ============ aviso de demonstração ============ */
+  .aviso{
+    border-bottom:1px solid var(--hair);
+    padding:15px 0 14px;
+    display:flex;align-items:center;gap:9px;
+    color:var(--flame);
+  }
+  .aviso::before{
+    content:"";width:5px;height:5px;border-radius:50%;
+    background:var(--flame);flex:0 0 auto;
+    box-shadow:0 0 9px 1px rgba(240,163,44,.55);
+  }
+  .aviso:empty{display:none}
+
+  /* ============ a tese ============ */
+  .tese{padding:44px 0 6px}
+  .tese h1{
+    font-family:"Fraunces",Georgia,serif;
+    font-variation-settings:"SOFT" 40,"WONK" 1,"opsz" 120;
+    font-weight:600;
+    font-size:clamp(38px,11.5vw,54px);
+    line-height:.98;letter-spacing:-.028em;
+  }
+  .tese h1 em{font-style:normal;color:var(--ember)}
+  .tese p{
+    color:var(--smoke);margin-top:18px;max-width:33ch;font-size:16.5px;
+  }
+
+  /* ============ o palco ============ */
+  .palco{
+    position:relative;margin-top:30px;
+    border-radius:var(--r);
+    background:var(--ash);
+    border:1px solid var(--hair);
+    overflow:hidden;isolation:isolate;
+  }
+  /* a brasa: acende quando o prato entra em cena */
+  .palco::before{
     content:"";position:absolute;z-index:0;
-    left:50%;top:44%;transform:translate(-50%,-50%);
-    width:118%;aspect-ratio:1/1;
+    left:50%;top:46%;transform:translate(-50%,-50%);
+    width:125%;aspect-ratio:1/1;
     background:radial-gradient(circle,
-      rgba(255,122,47,.34) 0%,
-      rgba(255,122,47,.13) 34%,
-      rgba(255,122,47,0) 66%);
-    transition:opacity .5s ease;
+      rgba(226,85,29,.42) 0%,
+      rgba(226,85,29,.16) 32%,
+      rgba(226,85,29,0) 64%);
+    opacity:.18;
+    transition:opacity 1.4s cubic-bezier(.3,.7,.3,1);
     pointer-events:none;
   }
+  .palco.aceso::before{opacity:1}
   /* sombra de contato: o prato pousa na página */
-  .stage::after{
+  .palco::after{
     content:"";position:absolute;z-index:1;
-    left:50%;bottom:16%;transform:translateX(-50%);
-    width:52%;height:26px;border-radius:50%;
-    background:radial-gradient(ellipse,rgba(3,10,11,.72) 0%,rgba(3,10,11,0) 70%);
+    left:50%;bottom:15%;transform:translateX(-50%);
+    width:54%;height:24px;border-radius:50%;
+    background:radial-gradient(ellipse,rgba(0,0,0,.7) 0%,rgba(0,0,0,0) 70%);
     pointer-events:none;
   }
-  .stage model-viewer{
+  .palco model-viewer{
     position:relative;z-index:2;
     width:100%;aspect-ratio:1/1;
-    background:transparent;
-    --poster-color:transparent;
-    transition:opacity .32s ease;
+    background:transparent;--poster-color:transparent;
+    transition:opacity .3s ease;
   }
-  .stage.swapping model-viewer{opacity:0}
+  .palco.trocando model-viewer{opacity:0}
 
-  .loading{
+  .carregando{
     position:absolute;inset:0;z-index:3;display:grid;place-content:center;
-    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--haze);
-    pointer-events:none;opacity:0;transition:opacity .25s ease;
+    color:var(--smoke);pointer-events:none;
+    opacity:0;transition:opacity .22s ease;
   }
-  .stage.swapping .loading{opacity:1}
+  .palco.trocando .carregando{opacity:1}
 
-  /* ---------- chamada para AR ---------- */
+  /* ============ chamada de AR ============ */
   .ar{
-    display:block;width:100%;margin-top:14px;padding:18px;
+    display:block;width:100%;margin-top:13px;padding:19px;
     appearance:none;border:0;cursor:pointer;
-    font-family:"Bricolage Grotesque",system-ui,sans-serif;
-    font-weight:700;font-size:17px;letter-spacing:-.01em;
-    color:#2A0E00;background:var(--ember);
-    border-radius:15px;
-    box-shadow:0 16px 34px -18px rgba(255,122,47,.9);
+    font-family:"Schibsted Grotesk",system-ui,sans-serif;
+    font-weight:700;font-size:18px;letter-spacing:-.005em;
+    color:#14090A;background:var(--ember);
+    border-radius:14px;
+    box-shadow:0 18px 38px -20px rgba(226,85,29,.95);
     transition:transform .14s ease,box-shadow .14s ease;
   }
-  .ar:active{transform:scale(.987);box-shadow:0 8px 20px -16px rgba(255,122,47,.9)}
+  .ar:active{transform:scale(.988);box-shadow:0 9px 22px -18px rgba(226,85,29,.95)}
   .ar[hidden]{display:none}
+  .dica{color:var(--smoke);text-align:center;margin-top:12px}
 
-  .arhint{
-    font-family:"JetBrains Mono",monospace;
-    font-size:11px;letter-spacing:.05em;color:var(--haze);
-    text-align:center;margin-top:11px;
+  /* ============ o prato em foco ============ */
+  .foco{margin-top:38px}
+  .foco .linha{
+    display:flex;align-items:baseline;gap:16px;
+    padding-bottom:11px;border-bottom:1px solid var(--hair);
   }
-
-  /* ---------- item em foco ---------- */
-  .focus{margin-top:34px}
-  .focus .top{
-    display:flex;align-items:baseline;gap:14px;
-    border-bottom:1px solid var(--edge);padding-bottom:10px;
-  }
-  .focus h2{
-    font-family:"Bricolage Grotesque",system-ui,sans-serif;
-    font-weight:700;font-size:25px;line-height:1.12;letter-spacing:-.02em;
+  .foco h2{
+    font-family:"Fraunces",Georgia,serif;
+    font-variation-settings:"SOFT" 40,"WONK" 1,"opsz" 60;
+    font-weight:500;font-size:24px;line-height:1.15;letter-spacing:-.015em;
     flex:1 1 auto;
   }
-  .focus .price{
-    font-family:"JetBrains Mono",monospace;font-weight:600;font-size:15px;
-    color:var(--salt);flex:0 0 auto;font-variant-numeric:tabular-nums;
+  .foco .preco{
+    font-family:"JetBrains Mono",monospace;font-size:14px;
+    color:var(--flame);flex:0 0 auto;font-variant-numeric:tabular-nums;
   }
-  .focus .desc{
-    color:var(--haze);margin-top:12px;font-size:16.5px;max-width:44ch;
-  }
+  .foco .preco:empty{display:none}
+  .foco .desc{color:var(--smoke);margin-top:13px;max-width:44ch}
 
-  /* ---------- trilha do cardápio ---------- */
-  .rail{margin-top:34px}
-  .rail .cap{
-    font-family:"JetBrains Mono",monospace;
-    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--haze);margin-bottom:6px;display:block;
-  }
-  .rail button{
-    display:flex;align-items:baseline;gap:12px;width:100%;
+  /* ============ o cardápio ============ */
+  .cardapio{margin-top:38px}
+  .cardapio .cap{color:var(--smoke);display:block;margin-bottom:4px}
+  .cardapio button{
+    display:flex;align-items:baseline;gap:13px;width:100%;
     appearance:none;background:none;border:0;cursor:pointer;text-align:left;
-    padding:15px 2px;
-    border-bottom:1px solid var(--edge);
-    color:var(--haze);
-    font-family:"Newsreader",Georgia,serif;font-size:16.5px;font-weight:300;
+    padding:16px 2px;border-bottom:1px solid var(--hair);
+    color:var(--smoke);
+    font-family:"Schibsted Grotesk",system-ui,sans-serif;font-size:16px;
     transition:color .2s ease;
   }
-  .rail button .nm{flex:1 1 auto}
-  .rail button .pr{
-    font-family:"JetBrains Mono",monospace;font-size:13px;
-    font-variant-numeric:tabular-nums;opacity:.75;
+  .cardapio .nm{flex:1 1 auto}
+  .cardapio .pr{
+    font-family:"JetBrains Mono",monospace;font-size:11px;
+    letter-spacing:.09em;text-transform:uppercase;opacity:.7;
   }
-  .rail button .lamp{
+  .cardapio .brasa{
     width:6px;height:6px;border-radius:50%;background:currentColor;
-    flex:0 0 auto;opacity:.35;transform:translateY(-3px);
+    flex:0 0 auto;opacity:.3;transform:translateY(-3px);
     transition:opacity .2s ease,box-shadow .2s ease,background .2s ease;
   }
-  .rail button.pending{cursor:default;opacity:.45}
-  .rail button.pending:hover{color:var(--haze)}
-  .rail button.pending .pr{font-style:normal;letter-spacing:.06em;font-size:11px;text-transform:uppercase}
-  .rail button[aria-current="true"]{color:var(--foam)}
-  .rail button[aria-current="true"] .lamp{
-    background:var(--ember);opacity:1;
-    box-shadow:0 0 10px 2px rgba(255,122,47,.6);
+  .cardapio button:hover{color:var(--bone)}
+  .cardapio button.espera{cursor:default;opacity:.4}
+  .cardapio button.espera:hover{color:var(--smoke)}
+  .cardapio button[aria-current="true"]{color:var(--bone)}
+  .cardapio button[aria-current="true"] .brasa{
+    background:var(--ember);opacity:1;box-shadow:0 0 10px 2px rgba(226,85,29,.6);
   }
-  .rail button:hover{color:var(--foam)}
 
-  /* ---------- rodapé / assinatura ---------- */
-  .sign{
-    margin-top:46px;padding-top:20px;border-top:1px solid var(--edge);
-    display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
+  /* ============ assinatura ============ */
+  .assina{
+    margin-top:46px;padding:22px 0 40px;border-top:1px solid var(--hair);
+    display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
   }
-  .sign p{
-    font-family:"JetBrains Mono",monospace;
-    font-size:11px;line-height:1.7;letter-spacing:.04em;color:var(--haze);
-  }
-  .sign a{color:var(--foam);text-decoration:none;border-bottom:1px solid var(--ember)}
-  .sign .who{color:var(--foam)}
+  .assina p{color:var(--smoke);line-height:1.8}
+  .assina .quem{color:var(--bone)}
+  .assina a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--ember)}
 
-  /* ---------- entrada ---------- */
-  .rise{opacity:0;transform:translateY(12px);animation:rise .62s cubic-bezier(.2,.7,.2,1) forwards}
-  .d1{animation-delay:.06s} .d2{animation-delay:.14s} .d3{animation-delay:.22s}
-  @keyframes rise{to{opacity:1;transform:none}}
+  /* ============ entrada ============ */
+  .sobe{opacity:0;transform:translateY(13px);animation:sobe .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .a1{animation-delay:.5s} .a2{animation-delay:.6s} .a3{animation-delay:.7s}
+  @keyframes sobe{to{opacity:1;transform:none}}
 
   @media (prefers-reduced-motion:reduce){
-    .rise{animation:none;opacity:1;transform:none}
-    .stage model-viewer,.stage::before,.loading{transition:none}
+    .sobe,.hero img{animation:none;opacity:1;transform:none}
+    .palco::before{transition:none;opacity:1}
+    .palco model-viewer,.carregando{transition:none}
   }
 </style>
 
+<header class="hero">
+  <!-- src fixo para o navegador começar a baixar antes do JS;
+       CONFIG.hero sobrescreve se o cliente for outro -->
+  <img id="heroImg" src="imagens/brasa.jpg" alt="" fetchpriority="high">
+  <div class="heroMarca">
+    <img id="bLogo" alt="" hidden>
+    <strong id="bBrand"></strong>
+    <span class="mono lugar" id="bPlace"></span>
+  </div>
+</header>
+
 <div class="wrap">
 
-  <div class="brand">
-    <span class="lamp"></span>
-    <img id="bLogo" class="logo" alt="" hidden>
-    <strong id="bBrand">Maré Alta</strong>
-    <span class="sep">/</span>
-    <span id="bPlace">Praia Brava</span>
-  </div>
+  <p class="mono aviso" id="demoNote"></p>
 
-  <header class="open rise">
-    <span class="kicker" id="demoNote"></span>
-    <h1>O prato antes<br>de pedir.</h1>
-    <p>Toque num item para ver em 3D. Depois coloque ele na sua mesa, do tamanho real.</p>
-  </header>
+  <section class="tese sobe a1">
+    <h1>Do fogo<br>para a <em>sua mesa</em>.</h1>
+    <p>O prato que você está pensando em pedir, em 3D — e do tamanho real, em cima da sua mesa.</p>
+  </section>
 
-  <div class="stage rise d1" id="stage">
-    <div class="loading">carregando</div>
+  <div class="palco sobe a2" id="palco">
+    <div class="mono carregando">carregando</div>
     <model-viewer
       id="mv"
       camera-controls
       auto-rotate
-      auto-rotate-delay="1200"
-      rotation-per-second="18deg"
+      auto-rotate-delay="1400"
+      rotation-per-second="16deg"
       interaction-prompt="none"
       environment-image="neutral"
-      exposure="1.05"
-      shadow-intensity="1.25"
-      shadow-softness="0.85"
+      exposure="1.1"
+      shadow-intensity="1.2"
+      shadow-softness="0.9"
       ar
       ar-modes="webxr scene-viewer quick-look"
       ar-scale="fixed"
@@ -259,25 +279,25 @@
     </model-viewer>
   </div>
 
-  <button class="ar rise d1" id="arBtn">Ver na sua mesa</button>
-  <p class="arhint" id="arHint">aponte a câmera para a mesa</p>
+  <button class="ar sobe a2" id="arBtn">Ver na sua mesa</button>
+  <p class="mono dica sobe a2" id="arHint">aponte a câmera para a mesa</p>
 
-  <section class="focus rise d2" aria-live="polite">
-    <div class="top">
+  <section class="foco sobe a3" aria-live="polite">
+    <div class="linha">
       <h2 id="fName">—</h2>
-      <span class="price" id="fPrice"></span>
+      <span class="preco" id="fPrice"></span>
     </div>
     <p class="desc" id="fDesc"></p>
   </section>
 
-  <nav class="rail rise d3" aria-label="Cardápio">
-    <span class="cap">cardápio</span>
+  <nav class="cardapio" aria-label="Cardápio">
+    <span class="mono cap">cardápio</span>
     <div id="railList"></div>
   </nav>
 
-  <footer class="sign">
-    <p>experiência feita por<br><span class="who" id="sWho">Seu Estúdio</span></p>
-    <p><a id="sLink" href="#">quero no meu<br>restaurante</a></p>
+  <footer class="assina">
+    <p class="mono">experiência feita por<br><span class="quem" id="sWho"></span></p>
+    <p class="mono"><a id="sLink" href="#">quero no meu<br>restaurante</a></p>
   </footer>
 
 </div>
@@ -285,89 +305,81 @@
 <script>
 /* ============================================================
    CONFIG — é só isto que muda de cliente para cliente.
-   Troque marca, itens e o link do rodapé. Nada mais abaixo
-   precisa ser tocado.
    ============================================================ */
 const CONFIG = {
   brand: "Aspas",
   place: "Praia Brava · Itajaí",
 
-  // Logo do cliente (PNG com transparência, claro). Vazio = usa o
-  // nome em texto. O arquivo veio do site do próprio restaurante.
-  logo: "marca/aspas-logo.png",
+  hero: "imagens/brasa.jpg",          // foto de abertura, 1400px, ~250 KB
+  logo: "marca/aspas-logo.png",       // PNG claro com transparência
 
   // Aviso obrigatório enquanto a página não for autorizada pelo
   // restaurante. Deixe vazio ("") só depois que o cliente fechar.
   demoNote: "demonstração — não é o cardápio oficial do Aspas",
 
-  // assinatura do rodapé
   studio: "Seu Estúdio",
   whatsapp: "5547999999999",          // só números, com DDI 55
   pitch: "Vi a demonstração do cardápio em 3D e quero conversar.",
 
   // Sem preços: não invente valores de um restaurante real.
-  // Preencha "price" só com a tabela que o próprio cliente passar.
   items: [
     {
       name: "Peixe selado, purê e amêndoas",
       price: "",
       desc: "Modelo 3D gerado a partir da foto publicada no site do Aspas. É este o resultado que entra para cada prato do cardápio.",
       glb: "modelos/aspas-peixe.glb",
-      usdz: ""                        // opcional: .usdz melhora o AR no iPhone
+      usdz: ""                        // opcional: melhora o AR no iPhone
     },
-    { name: "Polvo na brasa",  price: "", pending: true },
-    { name: "Spritz da casa",  price: "", pending: true },
-    { name: "Sobremesa",       price: "", pending: true }
+    { name: "Polvo na brasa", pending: true },
+    { name: "Spritz da casa",  pending: true },
+    { name: "Sobremesa",       pending: true }
   ]
 };
 
 /* ============================================================ */
 
 const mv     = document.getElementById('mv');
-const stage  = document.getElementById('stage');
+const palco  = document.getElementById('palco');
 const arBtn  = document.getElementById('arBtn');
 const arHint = document.getElementById('arHint');
 const rail   = document.getElementById('railList');
 
 document.getElementById('bBrand').textContent = CONFIG.brand;
 document.getElementById('bPlace').textContent = CONFIG.place;
+document.getElementById('sWho').textContent   = CONFIG.studio;
+document.getElementById('heroImg').src        = CONFIG.hero;
+document.title = CONFIG.brand + " · cardápio em 3D";
 
-// com logo, o nome em texto vira apenas leitura para tecnologia assistiva
+// com logo, o nome em texto fica só para tecnologia assistiva
 if (CONFIG.logo) {
   const img = document.getElementById('bLogo');
   img.src = CONFIG.logo;
   img.alt = CONFIG.brand;
   img.hidden = false;
   const txt = document.getElementById('bBrand');
-  txt.style.position = 'absolute';
-  txt.style.width = '1px';
-  txt.style.height = '1px';
-  txt.style.overflow = 'hidden';
-  txt.style.clip = 'rect(0 0 0 0)';
+  txt.style.cssText =
+    'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)';
 }
-document.getElementById('sWho').textContent   = CONFIG.studio;
-document.title = CONFIG.brand + " · cardápio em 3D";
 
 const note = document.getElementById('demoNote');
 if (CONFIG.demoNote) note.textContent = CONFIG.demoNote;
 else note.remove();
 
 const link = document.getElementById('sLink');
-link.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(CONFIG.pitch);
+link.href   = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(CONFIG.pitch);
 link.target = "_blank";
-link.rel = "noopener";
+link.rel    = "noopener";
 
-let current = -1;
+let atual = -1;
 
-function show(i){
-  if (i === current) return;
+function mostrar(i){
+  if (i === atual) return;
   const item = CONFIG.items[i];
-  current = i;
+  atual = i;
 
-  stage.classList.add('swapping');
-
-  mv.addEventListener('load', () => stage.classList.remove('swapping'), { once:true });
-  mv.addEventListener('error', () => stage.classList.remove('swapping'), { once:true });
+  palco.classList.add('trocando');
+  mv.addEventListener('load',  () => palco.classList.remove('trocando'), { once:true });
+  mv.addEventListener('error', () => palco.classList.remove('trocando'), { once:true });
 
   mv.src = item.glb;
   if (item.usdz) mv.setAttribute('ios-src', item.usdz);
@@ -376,7 +388,7 @@ function show(i){
 
   document.getElementById('fName').textContent  = item.name;
   document.getElementById('fPrice').textContent = item.price || "";
-  document.getElementById('fDesc').textContent  = item.desc || "";
+  document.getElementById('fDesc').textContent  = item.desc  || "";
 
   [...rail.children].forEach((b, n) =>
     b.setAttribute('aria-current', n === i ? 'true' : 'false'));
@@ -385,27 +397,36 @@ function show(i){
 CONFIG.items.forEach((item, i) => {
   const b = document.createElement('button');
   b.type = 'button';
-  b.innerHTML =
-    '<span class="lamp"></span>' +
-    '<span class="nm"></span>' +
-    '<span class="pr"></span>';
+  b.innerHTML = '<span class="brasa"></span><span class="nm"></span><span class="pr"></span>';
   b.querySelector('.nm').textContent = item.name;
 
   if (item.pending) {
     // ainda sem modelo: não finge que existe
     b.querySelector('.pr').textContent = "em produção";
     b.disabled = true;
-    b.classList.add('pending');
+    b.classList.add('espera');
   } else {
     b.querySelector('.pr').textContent = item.price || "";
-    b.addEventListener('click', () => show(i));
+    b.addEventListener('click', () => mostrar(i));
   }
   rail.appendChild(b);
 });
 
-show(0);
+mostrar(0);
 
-/* AR só existe se o aparelho suportar — some em vez de falhar. */
+/* a brasa acende quando o prato entra em cena — o único momento
+   coreografado da página */
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver((entradas, obs) => {
+    entradas.forEach(e => {
+      if (e.isIntersecting) { palco.classList.add('aceso'); obs.disconnect(); }
+    });
+  }, { threshold:.35 }).observe(palco);
+} else {
+  palco.classList.add('aceso');
+}
+
+/* AR só existe se o aparelho suportar — some em vez de falhar */
 mv.addEventListener('load', () => {
   const ok = mv.canActivateAR;
   arBtn.hidden = !ok;
