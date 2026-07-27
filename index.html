@@ -58,6 +58,9 @@
   }
   .brand strong{color:var(--foam);font-weight:600}
   .brand .sep{opacity:.4}
+  /* logo do cliente, quando houver: substitui o nome em texto */
+  .brand .logo{height:26px;width:auto;display:block;flex:0 0 auto}
+  .brand .logo[hidden]{display:none}
 
   /* ---------- abertura ---------- */
   .open{padding:30px 0 22px}
@@ -224,6 +227,7 @@
 
   <div class="brand">
     <span class="lamp"></span>
+    <img id="bLogo" class="logo" alt="" hidden>
     <strong id="bBrand">Maré Alta</strong>
     <span class="sep">/</span>
     <span id="bPlace">Praia Brava</span>
@@ -288,6 +292,10 @@ const CONFIG = {
   brand: "Aspas",
   place: "Praia Brava · Itajaí",
 
+  // Logo do cliente (PNG com transparência, claro). Vazio = usa o
+  // nome em texto. O arquivo veio do site do próprio restaurante.
+  logo: "marca/aspas-logo.png",
+
   // Aviso obrigatório enquanto a página não for autorizada pelo
   // restaurante. Deixe vazio ("") só depois que o cliente fechar.
   demoNote: "demonstração — não é o cardápio oficial do Aspas",
@@ -323,6 +331,20 @@ const rail   = document.getElementById('railList');
 
 document.getElementById('bBrand').textContent = CONFIG.brand;
 document.getElementById('bPlace').textContent = CONFIG.place;
+
+// com logo, o nome em texto vira apenas leitura para tecnologia assistiva
+if (CONFIG.logo) {
+  const img = document.getElementById('bLogo');
+  img.src = CONFIG.logo;
+  img.alt = CONFIG.brand;
+  img.hidden = false;
+  const txt = document.getElementById('bBrand');
+  txt.style.position = 'absolute';
+  txt.style.width = '1px';
+  txt.style.height = '1px';
+  txt.style.overflow = 'hidden';
+  txt.style.clip = 'rect(0 0 0 0)';
+}
 document.getElementById('sWho').textContent   = CONFIG.studio;
 document.title = CONFIG.brand + " · cardápio em 3D";
 
